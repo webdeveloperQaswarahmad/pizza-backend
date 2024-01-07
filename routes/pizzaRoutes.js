@@ -128,19 +128,16 @@ router.post("/update-pizza", async (req, res) => {
 
 
 router.post("/delete-pizza/:pizzaId", async (req, res) => {
-  const pizzaId = req.params.pizzaId;
+
 
   try {
-    // Find the pizza by ID
-    const pizza = await Pizza.findById(pizzaId);
+    const pizzaId = req.params.pizzaId;
 
-    // Check if the pizza exists
-    if (!pizza) {
-      return res.status(404).json({ message: "Pizza not found" });
+    const deletedPizza = await Pizza.findByIdAndDelete(new mongoose.Types.ObjectId(pizzaId));
+
+    if (!deletedPizza) {
+      return res.status(404).json({ message: 'Pizza not found' });
     }
-
-    // Delete the pizza
-    await pizza.remove();
 
     res.status(200).json({
       success: true,
@@ -151,6 +148,8 @@ router.post("/delete-pizza/:pizzaId", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+
 
 
 
