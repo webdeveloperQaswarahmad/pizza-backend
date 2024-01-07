@@ -35,7 +35,7 @@ router.post("/add-pizza", async (req, res) => {
 
 router.get("/get-pizza", async (req, res) => {
 try{
-    const data = await Pizza.find();
+    const data = await Pizza.find().limit(10);
     res.json(data)
     console.log('data',data);
 }
@@ -65,6 +65,7 @@ router.get("/edit-pizza/:pizzaId", async (req, res) => {
 
   try {
     const pizza = await Pizza.findById(new mongoose.Types.ObjectId(pizzaId));
+    
 
     if (!pizza) {
       // If no pizza is found with the given ID, return a 404 Not Found response
@@ -76,6 +77,78 @@ router.get("/edit-pizza/:pizzaId", async (req, res) => {
   } catch (error) {
     console.error('Error:', error.message);
     res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
+// router.post("/update-pizza", async (req, res) => {
+//   const updatedPizza = req.body.updatedPizza;
+//   console.log('Received pizzaId:', updatedPizza);
+
+//   try {
+//     const pizza = await Pizza.findOne({_id:updatedPizza._id});
+//     pizza.name = updatedPizza.name,
+//     pizza.description= updatedPizza.description,
+//     pizza.image=updatedPizza.image,
+//     pizza.category=updatedPizza.category,
+//     pizza.prices=[updatedPizza.prices]
+//     await pizza.save()
+//     res.status(200).send('Pizza updated successfully!')
+    
+//   } catch (error) {
+//     res.status(400).json({message:error})
+
+//   }
+// });
+
+
+// Update the router.post endpoint
+router.post("/update-pizza", async (req, res) => {
+  const updatedPizza = req.body.updatedPizza;
+  console.log('Received updated pizza data:', updatedPizza);
+
+  try {
+    const pizza = await Pizza.findOne({ _id: updatedPizza._id });
+    if (!pizza) {
+      return res.status(404).json({ message: 'Pizza not found' });
+    }
+
+    pizza.name = updatedPizza.name;
+    pizza.description = updatedPizza.description;
+    pizza.image = updatedPizza.image;
+    pizza.category = updatedPizza.category;
+    pizza.prices = [updatedPizza.prices];
+
+    await pizza.save();
+    res.status(200).send('Pizza updated successfully!');
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+
+router.post("/delete-pizza/:pizzaId", async (req, res) => {
+  const pizzaId = req.params.pizzaId;
+
+  try {
+    // Find the pizza by ID
+    const pizza = await Pizza.findById(pizzaId);
+
+    // Check if the pizza exists
+    if (!pizza) {
+      return res.status(404).json({ message: "Pizza not found" });
+    }
+
+    // Delete the pizza
+    await pizza.remove();
+
+    res.status(200).json({
+      success: true,
+      message: "Pizza deleted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
