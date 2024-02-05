@@ -3,31 +3,22 @@ const router = express.Router();
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 
-
 router.post("/register", async (req, res) => {
     const { name, email, password } = req.body;
   
     try {
-      // Check if the email already exists
       const existingUser = await User.findOne({ email });
   
       if (existingUser) {
-        // Email already exists, send a response indicating that registration failed
         return res.status(400).json({
           success: false,
           message: "Email already exists. Please use a different email.",
         });
       }
   
-      // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
-  
-      // Create a new User instance with the hashed password
       const newUser = new User({ name, email, password: hashedPassword });
-  
-      // Save the user to the database
-      await newUser.save();
-  
+        await newUser.save();
       res.status(200).json({
         success: true,
         message: "Registered Successfully",
@@ -67,23 +58,8 @@ router.post("/register", async (req, res) => {
     }
   })
 
-// router.get("getallusers",async(req,res)=>{
-//   try {
-//     const users= await User.find({});
-//     res.status(200).send(users)
-
-//   } catch (error) {
-//     res.status(404).json({
-//       message:error.stack
-//     })
-//   }
-// })
-
-
-
 router.get('/getallusers', async (req, res) => {
   try {
-    // Your logic to fetch users from the database
     const users = await User.find({}).maxTimeMS(2000);
     res.status(200).send(users);
   } catch (error) {
@@ -93,7 +69,6 @@ router.get('/getallusers', async (req, res) => {
   }
 });
 
-// delete user account route 
 
 router.delete('/deleteuser/:userid', async (req, res) => {
   const userid = req.params.userid;
@@ -107,7 +82,6 @@ router.delete('/deleteuser/:userid', async (req, res) => {
   }
 });
 
-//   make a user to admin route 
 router.put('/toggle-admin/:userId', async (req, res) => {
   const userId = req.params.userId;
   console.log('Received PUT request for userId:', userId);
@@ -131,10 +105,5 @@ router.put('/toggle-admin/:userId', async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
-
-
-
-
-
 
 module.exports = router;

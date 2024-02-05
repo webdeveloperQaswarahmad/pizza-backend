@@ -1,15 +1,12 @@
-// routes/pizzaRoutes.js
 const express = require("express");
 const router = express.Router();
 const Pizza = require("../models/pizzaModel");
-const mongoose = require("mongoose"); // Import mongoose
-
+const mongoose = require("mongoose"); 
 
 // POST a new pizza
 router.post("/add-pizza", async (req, res) => {
   const { pizza} = req.body;
-  try {
-    
+  try { 
 // Create a new pizza
     const newPizza = new Pizza({
       name:pizza.name,
@@ -19,7 +16,6 @@ router.post("/add-pizza", async (req, res) => {
       image:pizza.image,
       description:pizza.description,
     });
-
     // Save the pizza to the database
     const savedPizza = await newPizza.save();
 
@@ -44,21 +40,6 @@ catch(error){
 }
 });
 
-
-// router.post("/edit-pizza", async (req, res) => {
-//   const pizzaId=req.body.pizzaId
-//   try{
-//       const pizza = await Pizza.find({_id:pizzaId});
-//       res.send(pizza)
-//   }
-//   catch(error){
-//       res.status(500).json({message: error.message})
-//   }
-//   });
-
-// module.exports = router;
-
-
 router.get("/edit-pizza/:pizzaId", async (req, res) => {
   const pizzaId = req.params.pizzaId;
   console.log('Received pizzaId:', pizzaId);
@@ -68,7 +49,6 @@ router.get("/edit-pizza/:pizzaId", async (req, res) => {
     
 
     if (!pizza) {
-      // If no pizza is found with the given ID, return a 404 Not Found response
       return res.status(404).json({ message: 'Pizza not found' });
     }
 
@@ -79,28 +59,6 @@ router.get("/edit-pizza/:pizzaId", async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
-
-
-// router.post("/update-pizza", async (req, res) => {
-//   const updatedPizza = req.body.updatedPizza;
-//   console.log('Received pizzaId:', updatedPizza);
-
-//   try {
-//     const pizza = await Pizza.findOne({_id:updatedPizza._id});
-//     pizza.name = updatedPizza.name,
-//     pizza.description= updatedPizza.description,
-//     pizza.image=updatedPizza.image,
-//     pizza.category=updatedPizza.category,
-//     pizza.prices=[updatedPizza.prices]
-//     await pizza.save()
-//     res.status(200).send('Pizza updated successfully!')
-    
-//   } catch (error) {
-//     res.status(400).json({message:error})
-
-//   }
-// });
-
 
 // Update the router.post endpoint
 router.post("/update-pizza", async (req, res) => {
@@ -148,13 +106,5 @@ router.post("/delete-pizza/:pizzaId", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
-
-
-
-
-
-
-
-
 module.exports = router;
 
