@@ -84,7 +84,6 @@ router.delete('/deleteuser/:userid', async (req, res) => {
 
 router.put('/toggle-admin/:userId', async (req, res) => {
   const userId = req.params.userId;
-  console.log('Received PUT request for userId:', userId);
 
   try {
     const user = await User.findById(userId);

@@ -8,9 +8,7 @@ const connectDatabase = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log(`MongoDB Database Connected! ${connect.connections[0].host}`);
   } catch (error) {
-    console.log(`error:  ${error.message}`);
   }
 };
 module.exports = connectDatabase;
