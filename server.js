@@ -22,6 +22,9 @@ app.use(morgan("dev"));
 // Enable CORS for all routes
 app.use(cors());
 
+app.get("/", (req, res) => {
+  res.send("Welcome to the backend server");
+});
 // Use the pizza routes
 app.use('/api/v1', pizzaRoutes);
 app.use('/api/v1', userRoutes);
